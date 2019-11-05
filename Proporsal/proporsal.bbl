@@ -1,0 +1,14 @@
+\begin{thebibliography}{}
+
+\bibitem[{Aoudia} and {Hoydis}, 2018]{8645416}
+{Aoudia}, F.~A. and {Hoydis}, J. (2018).
+\newblock End-to-end learning of communications systems without a channel
+  model.
+\newblock In {\em 2018 52nd Asilomar Conference on Signals, Systems, and
+  Computers}, pages 298--303.
+
+\bibitem[Jin et~al., 2017]{jin2017escape}
+Jin, C., Ge, R., Netrapalli, P., Kakade, S.~M., and Jordan, M.~I. (2017).
+\newblock How to escape saddle points efficiently.
+
+\end{thebibliography}
