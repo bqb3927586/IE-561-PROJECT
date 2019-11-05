@@ -64,7 +64,7 @@
 	\begin{equation} \label{policy}
 		\pi(\bm{x}_p\vert f_{\theta_T}(s))=\frac{1}{(\pi\sigma^2)^N}\exp(-\frac{\Vert\bm{x}_p-\sqrt{1-\sigma^2}f_{\theta_T}(s)\Vert^2}{\sigma^2})
 	\end{equation}
-	\par To see how to modify this problem to a RL problem, we regard the message $s$ as the state, the input of channel $\bm{x}_p$ as the action, the per-example loss $l$ as the cost. The policy is the action distribution given the state, which is the Gaussian policy shown exactly by equation Eq. \eqref{policy}.
+	\par To see how to modify this problem to a RL problem, we regard the message $s$ as the state, the input of channel $\bm{x}_p$ as the action, the per-example loss $l$ as the cost. The policy is the action distribution given the state, which is the Gaussian policy shown exactly by equation Eq. \eqref{policy}. It is obvious that the next state(next message) is independent of the current state(current message) and current action(current input of the channel). Thus, we can consider each episode of the reinforcement learning as 1. 
 	\par Using the Monte-Carlo simulation and famous policy gradient algorithm, the parameter in transmitter can be updated by
 	\begin{equation}
 		\bm{\theta_{T+1}}=\bm{\theta_T}-\eta\frac{1}{B_T}\sum_{i=1}^{B_T}l^{i}\nabla_{\bm{\theta}_T}\log(\pi(\bm{x}_p^{i}\vert)f_{\bm{\theta}_T}(s^{i}))
