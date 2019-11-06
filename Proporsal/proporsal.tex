@@ -39,10 +39,15 @@
 			\hat{\bm{s}}=f_R(h(f_T(\bm{s},\bm{\theta_T}),\bm{\theta_H}),\bm{\theta_R})
 		\end{aligned}
 	\end{equation}
-	\par In order to optimize the parameter in the transmitter and receiver, a loss function between $\bm{s}$ and $\hat{\bm{s}}$ needs to be established. A common choice is the cross-entropy function over $M$ symbols as below:
-	\begin{equation} \label{loss}
-		\mathcal{L}(\bm{s}_{1:M},\hat{\bm{s}_{1:M}})=\sum_{i=1}^{M}\sum_{s_j\in\bm{s_i}}s_j\log(\hat{s_j})
+	\par In order to optimize the parameter in the transmitter and receiver, a loss function between $\bm{s}$ and $\hat{\bm{s}}$ needs to be established. A common choice is the cross-entropy function over $M$ symbols and the per-example loss is as below: as below:
+	\begin{equation}
+		l^{i}=\sum_{s_j\in\bm{s}_i}-s_j\log(\hat{s_j})
 	\end{equation}
+	\par And the total loss is the sum of $M$ symbols as below
+	\begin{equation} \label{loss}
+		\mathcal{L}(\bm{s}_{1:M},\hat{\bm{s}_{1:M}})=\sum_{i=1}^{M}l^i=\sum_{i=1}^{M}\sum_{s_j\in\bm{s_i}}-s_j\log(\hat{s_j})
+	\end{equation}
+	 
 	\par Using the gradient descent algorithm to optimize, we do back-propagation on $\hat{\bm{s}}$ with respect to $\bm{\theta_T}$ and $\bm{\theta_R}$. Receiver optimization is trivial. However, based on the chain rule,
 	\begin{equation}
 		\frac{\partial\mathcal{L}}{\partial\bm{\theta_T}}=\frac{\partial\mathcal{L}}{\partial f_R}\cdot\frac{\partial f_R}{\partial h}\cdot\frac{\partial h}{\partial f_T}\cdot\frac{\partial f_T}{\partial\bm{\theta_T}}
@@ -65,14 +70,18 @@
 		\pi(\bm{x}_p\vert f_{\theta_T}(s))=\frac{1}{(\pi\sigma^2)^N}\exp(-\frac{\Vert\bm{x}_p-\sqrt{1-\sigma^2}f_{\theta_T}(s)\Vert^2}{\sigma^2})
 	\end{equation}
 	\par To see how to modify this problem to a RL problem, we regard the message $s$ as the state, the input of channel $\bm{x}_p$ as the action, the per-example loss $l$ as the cost. The policy is the action distribution given the state, which is the Gaussian policy shown exactly by equation Eq. \eqref{policy}. It is obvious that the next state(next message) is independent of the current state(current message) and current action(current input of the channel). Thus, we can consider each episode of the reinforcement learning as 1. 
-	\par Using the Monte-Carlo simulation and famous policy gradient algorithm, the parameter in transmitter can be updated by
+	\par Using the Monte-Carlo simulation and famous policy gradient algorithm \citep{Sutton1998}, the parameter in transmitter can be updated by
 	\begin{equation}
-		\bm{\theta_{T+1}}=\bm{\theta_T}-\eta\frac{1}{B_T}\sum_{i=1}^{B_T}l^{i}\nabla_{\bm{\theta}_T}\log(\pi(\bm{x}_p^{i}\vert)f_{\bm{\theta}_T}(s^{i}))
+		\bm{\theta_{T+1}}=\bm{\theta_T}-\eta\frac{1}{B_T}\sum_{i=1}^{B_T}l^{i}\nabla_{\bm{\theta}_T}\log(\pi(\bm{x}_p^{i}\vert f_{\bm{\theta}_T}(s^{i})))
 	\end{equation}
-	\par where $l^{i}$ is the per-example loss for the $i^{th}$ message and can be computed by Eq. \eqref{loss} without summarization of $i$.
+	\par where the gradient in the above equation can be computed as below,
+	\begin{equation}
+		\nabla_{\bm{\theta_T}}\log(\pi(\bm{x}_p\vert f_{\bm{\theta_T}}(s^i)))=\frac{2\sqrt{1-\sigma^2}}{\sigma^2}\big(\nabla_{\bm{\theta}_T}f_{\bm{\theta}_T}(s^i)\big)^T\big(\bm{x}_p-\sqrt{1-\sigma^2}f_{\bm{\theta}_T}(s^i)\big)
+	\end{equation}
+	\par In order to implement RL algorithm, it is convenient to use popular deep learning platform such as \textbf{Tensor-flow} to run auto-gradient.
 	\section{Training Transmitter with direct non-convex zeroth-order optimization}
 	\noindent
-	\par Based on \cite{jin2017escape} work, I purpose a zeroth-order algorithm to direct optimization the function with only the access to the function value, which means the exact form of the channel function isn't needed anymore. The basic idea of this idea is to split the optimization into two parts. Firstly, we need to use the function evaluation to estimate the gradient at a given point, and then follow the framework of \cite{jin2017escape} algorithm to finish the gradient descent. The pseudo-code of this algorithm is as below.	
+	\par Based on \cite{jin2017escape} work, I purpose a zeroth-order algorithm \citep{2019arXiv191001277B} to direct optimization the function with only the access to the function value, which means the exact form of the channel function isn't needed anymore. The basic idea of this algorithm is to split the optimization into two parts. Firstly, we need to use the function evaluation to estimate the gradient at a given point. Then, follow the framework of \cite{jin2017escape} algorithm to finish the gradient descent. Next, we show the algorithm to estimate the gradient.
 	\begin{algorithm}[h]
 		\label{GE}
 		\caption{Gradient Estimation $GE({d,l,B,c',\hat{\epsilon},\bm{x}})$}
@@ -84,7 +93,7 @@
 		\end{algorithmic}
 	\end{algorithm}
 	\par Consider the whole cost function as $f$ with variable $\bm{\theta}_T$. Algorithm  \ref{GE} gives the approach to estimate the gradient with the method of Gaussian smoothing. $d$ is the dimension of $\bm{\theta}_T$,  $l$ is $l$-smooth parameter of function $f$, $B$ is the bound for gradient norm $\Vert \nabla f\Vert$, $c'>1$ is a constant. $\bm{x}$ is the point we make an estimation and $\hat{\epsilon}$ is the intended gap between the estimated gradient and true gradient. The line 1 in the algorithm gives the parameter used in the following lines. $v$ is the Gaussian smoothening parameter. $\sigma^2$ is the bound for the variance of gradient estimator in one sample. $m$ gives the total number of samples we need to get error less than $\hat{\epsilon}$. Line 2 generates $m$ Gaussian random vector with zero mean and variance $\mathbf{I}_d$ which are used to calculate the estimate of the gradient. The estimation algorithm (Line 3) takes an average of estimated gradient using $m$ samples. 
-	\par Next algorithm \ref{PGD-MF} utilize the estimated gradient and optimize the transmitter.
+	\par Next algorithm utilizes the estimated gradient and optimize the transmitter.
 	\begin{algorithm}[h]
 		\label{PGD-MF}
 		\caption{Estimated Gradient Descent Algorithm $EGD(\bm{x}_0,d,l,B,\chi_1,\theta,\rho,\epsilon,\hat{\epsilon},c,c',\delta,\Delta_f)$}

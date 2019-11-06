@@ -3,44 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: proporsal.aux
 The style file: apalike.bst
 Database file #1: ref.bib
-You've used 2 entries,
+You've used 4 entries,
             1935 wiz_defined-function locations,
-            481 strings with 3994 characters,
-and the built_in function-call counts, 893 in all, are:
-= -- 86
-> -- 41
-< -- 2
-+ -- 14
-- -- 14
-* -- 67
-:= -- 152
-add.period$ -- 5
-call.type$ -- 2
-change.case$ -- 17
-chr.to.int$ -- 2
-cite$ -- 2
-duplicate$ -- 37
-empty$ -- 58
-format.name$ -- 18
-if$ -- 182
+            494 strings with 4337 characters,
+and the built_in function-call counts, 1898 in all, are:
+= -- 197
+> -- 72
+< -- 4
++ -- 24
+- -- 24
+* -- 122
+:= -- 293
+add.period$ -- 11
+call.type$ -- 4
+change.case$ -- 32
+chr.to.int$ -- 4
+cite$ -- 4
+duplicate$ -- 98
+empty$ -- 120
+format.name$ -- 32
+if$ -- 412
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 1
-newline$ -- 12
-num.names$ -- 6
-pop$ -- 19
+missing$ -- 4
+newline$ -- 22
+num.names$ -- 12
+pop$ -- 36
 preamble$ -- 1
-purify$ -- 17
+purify$ -- 32
 quote$ -- 0
-skip$ -- 31
+skip$ -- 98
 stack$ -- 0
-substring$ -- 52
-swap$ -- 10
-text.length$ -- 1
+substring$ -- 108
+swap$ -- 45
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 12
+type$ -- 22
 warning$ -- 0
-while$ -- 6
+while$ -- 11
 width$ -- 0
-write$ -- 25
+write$ -- 51

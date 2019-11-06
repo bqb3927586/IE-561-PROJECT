@@ -7,8 +7,19 @@
 \newblock In {\em 2018 52nd Asilomar Conference on Signals, Systems, and
   Computers}, pages 298--303.
 
+\bibitem[{Bai} et~al., 2019]{2019arXiv191001277B}
+{Bai}, Q., {Agarwal}, M., and {Aggarwal}, V. (2019).
+\newblock {Escaping Saddle Points for Zeroth-order Nonconvex Optimization using
+  Estimated Gradient Descent}.
+\newblock {\em arXiv e-prints}, page arXiv:1910.01277.
+
 \bibitem[Jin et~al., 2017]{jin2017escape}
 Jin, C., Ge, R., Netrapalli, P., Kakade, S.~M., and Jordan, M.~I. (2017).
 \newblock How to escape saddle points efficiently.
+
+\bibitem[Sutton and Barto, 2018]{Sutton1998}
+Sutton, R.~S. and Barto, A.~G. (2018).
+\newblock {\em Reinforcement Learning: An Introduction}.
+\newblock The MIT Press, second edition.
 
 \end{thebibliography}
